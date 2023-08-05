@@ -4,48 +4,52 @@ import { faker } from "@faker-js/faker";
 const productsRouter = express.Router();
 
 productsRouter.get("/", (req, res) => {
-    const { size } = req.query;
-  
-    const products = [];
-  
-    const limit = size ?? 100;
-  
-    for (let i = 0; i < limit; i++) {
-      products.push(
-        {
-          name: faker.commerce.productName(),
-          price: Number(faker.commerce.price()),
-          image: faker.image.url()
-        }
-      );
-    }
-  
-    res.json(products);
+  const { size } = req.query;
+
+  const products = [];
+
+  const limit = size ?? 100;
+
+  for (let i = 0; i < limit; i++) {
+    products.push(
+      {
+        name: faker.commerce.productName(),
+        price: Number(faker.commerce.price()),
+        image: faker.image.url()
+      }
+    );
+  }
+
+  res.json(products);
 });
-  
+
 // Las rutas fijas deben ir antes de que las dinamicas, pues
 // pueden dar lugar a errores de routing, en este caso
 // si "/filter" no fuera antes, se confundiria con un ":id"
 productsRouter.get("/filter", (req, res) => {
-res.send("Yo soy un filtro");
+  res.send("Yo soy un filtro");
 });
 
 productsRouter.get("/:id", (req, res) => {
-const { id } = req.params;
+  const { id } = req.params;
 
-res.json(
-    { 
-    id,
-    name: "Product 2",
-    price: 1500
-    }
-)
+  if (id === "999") {
+    res.status(404).json({ message: "Not found" });
+  } else {
+    res.status(200).json(
+      {
+        id,
+        name: "Product 2",
+        price: 1500
+      }
+    );
+  }
 });
 
 productsRouter.post("/", (req, res) => {
   const body = req.body;
 
-  res.json(
+  res.status(201).json(
     {
       message: "User created",
       data: body,
@@ -69,7 +73,7 @@ productsRouter.patch("/:id", (req, res) => {
 
 productsRouter.delete("/:id", (req, res) => {
   const { id } = req.params;
-  
+
   res.json(
     {
       message: "Deleted user",
