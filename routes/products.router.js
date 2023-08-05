@@ -1,25 +1,13 @@
 import express from "express";
-import { faker } from "@faker-js/faker";
+
+import ProductsService from "../services/products.service.js";
 
 const productsRouter = express.Router();
+// Generamos una INSTANCIA del servicio
+const service = new ProductsService();
 
 productsRouter.get("/", (req, res) => {
-  const { size } = req.query;
-
-  const products = [];
-
-  const limit = size ?? 100;
-
-  for (let i = 0; i < limit; i++) {
-    products.push(
-      {
-        name: faker.commerce.productName(),
-        price: Number(faker.commerce.price()),
-        image: faker.image.url()
-      }
-    );
-  }
-
+  const products = service.Find();
   res.json(products);
 });
 
@@ -33,28 +21,17 @@ productsRouter.get("/filter", (req, res) => {
 productsRouter.get("/:id", (req, res) => {
   const { id } = req.params;
 
-  if (id === "999") {
-    res.status(404).json({ message: "Not found" });
-  } else {
-    res.status(200).json(
-      {
-        id,
-        name: "Product 2",
-        price: 1500
-      }
-    );
-  }
+ const product = service.FindOne(id);
+
+ res.status(200).json(product);
 });
 
 productsRouter.post("/", (req, res) => {
   const body = req.body;
 
-  res.status(201).json(
-    {
-      message: "User created",
-      data: body,
-    }
-  );
+  const newProduct = service.Create(body);
+
+  res.status(201).json(newProduct);
 });
 
 // Funcionaria exactamente igual con put
@@ -62,24 +39,17 @@ productsRouter.patch("/:id", (req, res) => {
   const { id } = req.params;
   const body = req.body;
 
-  res.json(
-    {
-      message: "User changed",
-      id,
-      data: body,
-    }
-  );
+  const product = service.Update(id, body);
+
+  res.json(product);
 });
 
 productsRouter.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  res.json(
-    {
-      message: "Deleted user",
-      id,
-    }
-  );
+  const productId = service.Delete(id);
+
+  res.json(productId);
 });
 
 export default productsRouter;
