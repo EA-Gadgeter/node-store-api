@@ -6,8 +6,8 @@ const productsRouter = express.Router();
 // Generamos una INSTANCIA del servicio
 const service = new ProductsService();
 
-productsRouter.get("/", (req, res) => {
-  const products = service.Find();
+productsRouter.get("/", async (req, res) => {
+  const products = await service.Find();
   res.json(products);
 });
 
@@ -18,36 +18,48 @@ productsRouter.get("/filter", (req, res) => {
   res.send("Yo soy un filtro");
 });
 
-productsRouter.get("/:id", (req, res) => {
+productsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
- const product = service.FindOne(id);
+  const product = await service.FindOne(id);
 
- res.status(200).json(product);
+  res.status(200).json(product);
 });
 
-productsRouter.post("/", (req, res) => {
+productsRouter.post("/", async (req, res) => {
   const body = req.body;
 
-  const newProduct = service.Create(body);
+  const newProduct = await service.Create(body);
 
   res.status(201).json(newProduct);
 });
 
 // Funcionaria exactamente igual con put
-productsRouter.patch("/:id", (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
+productsRouter.patch("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
 
-  const product = service.Update(id, body);
+    const product = await service.Update(id, body);
 
-  res.json(product);
+    res.json(product);
+  } catch (error) {
+    // En el servicio, Update() tira un error si el objeto no se encuentra
+    // En este try/catch, opbtenemos ese error
+    res.status(404).json(
+      {
+        // Los error que tira JS, internamente tienen
+        // una propiedad error
+        message: error.message
+      }
+    );
+  }
 });
 
-productsRouter.delete("/:id", (req, res) => {
+productsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const productId = service.Delete(id);
+  const productId = await service.Delete(id);
 
   res.json(productId);
 });
