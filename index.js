@@ -1,14 +1,33 @@
 import express from "express"
+import cors from "cors";
 
 import routerApi from "./routes/index.js";
-import { boomErrorHandler, errorHandler, logErrors } from "./middlewares/error.handler.js";
+import { 
+  boomErrorHandler, 
+  errorHandler, 
+  logErrors 
+} from "./middlewares/error.handler.js";
 
 
 const app = express();
 const port =  process.env.POST ?? 3000;
 
-// Middlewares para poder recibir informacion en formato JSON
+// Middleware para poder recibir informacion en formato JSON
 app.use(express.json());
+// Middleware para permitir otros origenes de cors
+const whitelist = [
+  "http://localhost:8080"
+];
+const options = {
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("No allowed"));
+    }
+  }
+};
+app.use(cors(options));
 
 app.get("/", (req, res) => {
   res.send("Hola, mi server en express");
