@@ -8,7 +8,6 @@ import {
   logErrors 
 } from "./middlewares/error.handler.js";
 
-
 const app = express();
 const port =  process.env.POST ?? 3000;
 
@@ -20,7 +19,7 @@ const whitelist = [
 ];
 const options = {
   origin: (origin, callback) => {
-    if (whitelist.includes(origin)) {
+    if (whitelist.includes(origin) || !origin) {
       callback(null, true);
     } else {
       callback(new Error("No allowed"));
