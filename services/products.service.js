@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import boom from "@hapi/boom";
 
 // Todo lo de esta clase antes estaba en las rutas de 
 // productos, lo seperamos en una CAPA de SERVICIOS aparte,
@@ -18,7 +19,8 @@ class ProductsService {
           id: faker.string.uuid(),
           name: faker.commerce.productName(),
           price: Number(faker.commerce.price()),
-          image: faker.image.url()
+          image: faker.image.url(),
+          isBlock: faker.datatype.boolean()
         }
       );
     }
@@ -43,13 +45,24 @@ class ProductsService {
   }
 
   async FindOne(id) {
-    return this.products.find(product => product.id === id);
+    const product = this.products.find(product => product.id === id);
+
+    if (!product) {
+      // Boom tiene funciones para los diferentes statuscode
+      throw boom.notFound("Product not found");
+    }
+
+    if (product.isBlock) {
+      throw boom.conflict("Product is blocked");
+    }
+
+    return product;
   }
 
   async Update(id, changes) {
     const productIndex = this.products.findIndex(product => product.id === id);
     if (productIndex === -1) {
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
 
     this.products[productIndex] = {
@@ -63,7 +76,7 @@ class ProductsService {
   async Delete(id) {
     const productIndex = this.products.findIndex(product => product.id === id);
     if (productIndex === -1) {
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
 
     this.products.splice(productIndex, 1);
