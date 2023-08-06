@@ -1,18 +1,77 @@
-import express from "express";
+import { Router } from 'express';
 
-const usersRouter = express.Router();
+import UserService from './../services/users.service.js';
+import { validatorHandler } from './../middlewares/validator.handler.js';
+import { 
+  updateUserSchema,
+  createUserSchema,
+  getUserSchema
+} from './../dto/user.dto.js';
 
-usersRouter.get("/", (req, res) => {
-    const { limit, offset } = req.query;
-    
-    if (limit && offset) {
-      res.json({
-        limit,
-        offset
-      })
-    } else {
-      res.send("No hay parametros");
+const usersRouter = Router();
+const service = new UserService();
+
+usersRouter.get('/', async (req, res, next) => {
+  try {
+    const categories = await service.Find();
+    res.json(categories);
+  } catch (error) {
+    next(error);
+  }
+});
+
+usersRouter.get('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const category = await service.FindOne(id);
+      res.json(category);
+    } catch (error) {
+      next(error);
     }
-  });
+  }
+);
+
+usersRouter.post('/',
+  validatorHandler(createUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newCategory = await service.Create(body);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+usersRouter.patch('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(updateUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const category = await service.Update(id, body);
+      res.json(category);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+usersRouter.delete('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      await service.Delete(id);
+      res.status(201).json({id});
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default usersRouter;
