@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
 import boom from "@hapi/boom";
 
+import poolDB from "../libs/postgresPool.js";
+
 // Todo lo de esta clase antes estaba en las rutas de 
 // productos, lo seperamos en una CAPA de SERVICIOS aparte,
 // esto basandonos en la CLEAN ARCHITECTURE
@@ -8,6 +10,10 @@ class ProductsService {
   constructor() {
     this.products = [];
     this.Generate();
+    this.poolDB = poolDB;
+    this.poolDB.on("error", (error) => {
+      console.log(error);
+    });
   }
 
   Generate() {
@@ -37,11 +43,10 @@ class ProductsService {
   }
 
   async Find() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 2000)
-    });
+    const query = "SELECT * FROM tasks";
+    const response = await this.poolDB.query(query);
+
+    return response.rows;
   }
 
   async FindOne(id) {

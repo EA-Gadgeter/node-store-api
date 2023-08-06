@@ -1,0 +1,12 @@
+version: "3.3"
+
+services:
+  postgres-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=my_store 
+      - POSTGRES_USER=gadgeter
+      - POSTGRES_PASSWORD=password
+    ports: [5432:5432] 
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data 

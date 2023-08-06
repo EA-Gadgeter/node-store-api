@@ -1,6 +1,8 @@
 import express from "express"
 import cors from "cors";
 
+import appConfig from "./config/config.js";
+
 import routerApi from "./routes/index.js";
 import { 
   boomErrorHandler, 
@@ -9,7 +11,7 @@ import {
 } from "./middlewares/error.handler.js";
 
 const app = express();
-const port =  process.env.POST ?? 3000;
+const port =  appConfig.port;
 
 // Middleware para poder recibir informacion en formato JSON
 app.use(express.json());
