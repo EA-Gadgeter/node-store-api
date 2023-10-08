@@ -1,12 +1,12 @@
-import { Router } from 'express';
+const { Router }  = require("express");
 
-import CategoryService from './../services/categories.service.js';
-import { validatorHandler } from './../middlewares/validator.handler.js';
-import { 
+const CategoryService = require("./../services/categories.service.js");
+const { validatorHandler } = require("./../middlewares/validator.handler.js");
+const { 
   createCategorySchema, 
   updateCategorySchema, 
   getCategorySchema 
-} from './../dto/category.dto.js';
+} = require("./../dto/category.dto.js");
 
 const categoriesRouter = Router();
 const service = new CategoryService();
@@ -74,4 +74,4 @@ categoriesRouter.delete('/:id',
   }
 );
 
-export default categoriesRouter;
+module.exports = categoriesRouter;

@@ -1,4 +1,4 @@
-import Joi from "joi";
+const Joi = require("joi");
 
 // Joi es una libreria que nos va permitir generar schemas
 // para porder generar validaciones de lo que debemos recibir
@@ -25,7 +25,7 @@ const getProductSchema = Joi.object({
   id: id.required()
 });
 
-export {
+module.exports = {
   createProductSchema,
   updateProductSchema,
   getProductSchema

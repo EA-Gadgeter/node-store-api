@@ -1,8 +1,8 @@
-import { Router } from "express";
+const { Router } = require("express");
 
-import productsRouter from "./products.router.js";
-import usersRouter from "./users.router.js";
-import categoriesRouter from "./categories.router.js";
+const productsRouter = require("./products.router.js");
+const usersRouter = require("./users.router.js");
+const categoriesRouter = require("./categories.router.js");
 
 function routerApi(app) {
   // Creando una ruta madre dinamica
@@ -14,4 +14,4 @@ function routerApi(app) {
   router.use("/categories", categoriesRouter);
 }
 
-export default routerApi;
+module.exports = routerApi;

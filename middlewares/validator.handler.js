@@ -1,4 +1,4 @@
-import boom from "@hapi/boom";
+const boom = require("@hapi/boom");
 
 // Middleware para validar datos
 function validatorHandler(schema, property) {
@@ -25,4 +25,6 @@ function validatorHandler(schema, property) {
   };
 }
 
-export { validatorHandler };
+module.exports = {
+  validatorHandler
+}

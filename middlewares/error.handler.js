@@ -1,5 +1,5 @@
 // MIDDLEWARES PARA ERRORES
-import { ValidationError } from "sequelize";
+const { ValidationError } =  require("sequelize");
 
 // Middle que solo imprime el error en consola
 function logErrors(error, req, res, next) {
@@ -44,7 +44,7 @@ function ormErrorHandler(err, req, res, next) {
   }
 }
 
-export { 
+module.exports = { 
   logErrors, 
   errorHandler, 
   boomErrorHandler, 

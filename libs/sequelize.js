@@ -1,7 +1,7 @@
-import { Sequelize } from "sequelize";
+const { Sequelize } = require("sequelize");
 
-import appConfig from "../config/config.js";
-import setupModels from "../db/models/index.js";
+const appConfig = require("../config/config.js");
+const setupModels = require("../db/models/index.js");
 
 // Una tercera forma de manejar nuestra conexion a base
 // de datos, que es por un ORM, en el caso de sequelize que
@@ -9,18 +9,21 @@ import setupModels from "../db/models/index.js";
 // el pool de conexiones
 const USER = encodeURIComponent(appConfig.db.user);
 const PASSWORD = encodeURIComponent(appConfig.db.password);
-export const URI = `mysql://${USER}:${PASSWORD}@${appConfig.db.host}:${appConfig.db.port}/${appConfig.db.name}`;
+const URI = `postgres://${USER}:${PASSWORD}@${appConfig.db.host}:${appConfig.db.port}/${appConfig.db.name}`;
 
 const sequelize = new Sequelize(URI, {
-    dialect: "mysql",
+    dialect: "postgres",
     logging: true // En la consola podemos ver la consulta SQL
 });
 
 // Cargamos los modelos en la conexion de sequelize
 setupModels(sequelize);
 
-// Una migracion, en este caso, migro el schema del modelo de 
-// "users" a la base de datos
-sequelize.sync();
+// Las mismos schemas tanto en back como la base
+// NO es lo ideal para produccion
+// sequelize.sync();
 
-export default sequelize;
+module.exports = {
+    sequelize,
+    URI
+};

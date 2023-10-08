@@ -1,13 +1,12 @@
-import express from "express";
+const express = require("express");
 
-import ProductsService from "../services/products.service.js";
-import { validatorHandler } from "../middlewares/validator.handler.js";
-
-import {
+const ProductsService = require("../services/products.service.js");
+const { validatorHandler } = require("../middlewares/validator.handler.js");
+const {
   createProductSchema,
   getProductSchema,
   updateProductSchema
-} from "../dto/product.dto.js";
+} = require("../dto/product.dto.js")
 
 const productsRouter = express.Router();
 // Generamos una INSTANCIA del servicio
@@ -110,4 +109,4 @@ productsRouter.delete("/:id", async (req, res) => {
   res.json(productId);
 });
 
-export default productsRouter;
+module.exports = productsRouter;

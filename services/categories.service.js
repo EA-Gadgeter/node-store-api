@@ -1,5 +1,3 @@
-import boom from '@hapi/boom';
-
 class CategoriesService {
 
   constructor() {
@@ -30,4 +28,4 @@ class CategoriesService {
 
 }
 
-export default CategoriesService;
+module.exports = CategoriesService;

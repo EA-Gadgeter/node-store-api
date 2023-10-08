@@ -1,5 +1,3 @@
-import boom from '@hapi/boom';
-
 class OrdersService {
 
   constructor(){

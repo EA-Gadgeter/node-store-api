@@ -1,4 +1,4 @@
-import pg from "pg";
+const pg = require("pg");
 
 // "pg" es un modulo que nos permite crear una conexion a una
 // base de datos postgres, basicamente creamos un cliente y esperamos
@@ -26,5 +26,5 @@ async function getPGConnection() {
   return client;
 }
 
-export default getPGConnection;
+module.exports = getPGConnection;
 

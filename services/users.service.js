@@ -1,7 +1,7 @@
-import poolDB from "../libs/postgresPool.js";
-import sequelize from "../libs/sequelize.js";
+const boom =  require("@hapi/boom");
 
-import boom from "@hapi/boom";
+const poolDB = require("../libs/postgresPool.js");
+const { sequelize } = require("../libs/sequelize.js");
 
 const { models } = sequelize;
 
@@ -59,4 +59,4 @@ class UsersService {
   }
 }
 
-export default UsersService;
+module.exports = UsersService;

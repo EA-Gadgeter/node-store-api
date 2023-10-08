@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+const dotenv = require("dotenv");
 
 // Libreria que nos permite cargar todas las
 // VARIABLES DE ENTORNO del archivo .env
@@ -19,4 +19,4 @@ const appConfig = {
   }
 };
 
-export default appConfig;
+module.exports = appConfig;

@@ -1,6 +1,5 @@
-import pg from "pg";
-
-import appConfig from "../config/config.js";
+const pg = require("pg");
+const appConfig = require("../config/config.js");
 
 // Podemos crear un CONNECTION STRING en lugar de
 // ir pasando dato por dato a la conexion, ciframos
@@ -25,5 +24,5 @@ const poolDB = new pg.Pool(
 );
 ;
 
-export default poolDB;
+module.exports = poolDB;
 

@@ -1,4 +1,4 @@
-import { User, userSchema } from "./user.model.js";
+const { User, userSchema } = require("./user.model.js");
 
 // Aqui vamos a inicializar todos los modelos
 function setupModels(sequelize) {
@@ -8,4 +8,4 @@ function setupModels(sequelize) {
     User.init(userSchema, User.config(sequelize));
 }
 
-export default setupModels;
+module.exports = setupModels;
