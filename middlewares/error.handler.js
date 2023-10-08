@@ -1,4 +1,5 @@
 // MIDDLEWARES PARA ERRORES
+import { ValidationError } from "sequelize";
 
 // Middle que solo imprime el error en consola
 function logErrors(error, req, res, next) {
@@ -22,8 +23,6 @@ function boomErrorHandler(error, req, res, next) {
 // Ultimo middleware que simplemente responde al cliente con error 500
 // el mensaje de error,
 function errorHandler(error, req, res, next) {
-  console.log("errorHandler");
-  console.error(error);
   res.status(500).json(
     {
       message: error.message,
@@ -32,4 +31,22 @@ function errorHandler(error, req, res, next) {
   );
 }
 
-export { logErrors, errorHandler, boomErrorHandler };
+function ormErrorHandler(err, req, res, next) {
+  if (err instanceof ValidationError) {
+    const { parent, errors } = err;
+    res.status(409).json({
+      statusCode: 409,
+      error: parent.detail,
+      message: errors[0].message
+    });
+  } else {
+    next(err);
+  }
+}
+
+export { 
+  logErrors, 
+  errorHandler, 
+  boomErrorHandler, 
+  ormErrorHandler 
+};

@@ -1,4 +1,9 @@
-import poolDB from "../libs/postgresPool";
+import poolDB from "../libs/postgresPool.js";
+import sequelize from "../libs/sequelize.js";
+
+import boom from "@hapi/boom";
+
+const { models } = sequelize;
 
 class UsersService {
   constructor() {
@@ -11,7 +16,8 @@ class UsersService {
   }
 
   async Create(data) {
-    return data;
+    const newUser = await models.User.create(data);
+    return newUser;
   }
 
   async Find() {
@@ -22,24 +28,33 @@ class UsersService {
 
     // En cada query, el mismo pool se encarga de crear
     // un cliente y cerrar la conexion
-    const query = "SELECT * FROM tasks";
-    const response = await this.poolDB.query(query);
+    // const query = "SELECT * FROM tasks";
+    // const response = await this.poolDB.query(query);
 
-    return response.rows;
+    // Con sequelize
+    const data = await models.User.findAll();
+    return data;
   }
 
   async FindOne(id) {
-    return { id };
+    const user = await models.User.findByPk(id);
+    if (!user) {
+      throw boom.notFound("User not found");
+    }
+
+    return user;
   }
 
   async Update(id, changes) {
-    return {
-      id,
-      changes,
-    };
+    const user = await this.FindOne(id);
+    const response = await user.update(changes);
+
+    return response;
   }
 
   async Delete(id) {
+    const user = await this.FindOne(id);
+    await user.destroy();
     return { id };
   }
 }

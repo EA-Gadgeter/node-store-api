@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import boom from "@hapi/boom";
 
-import poolDB from "../libs/postgresPool.js";
+import sequelize from "../libs/sequelize.js";
 
 // Todo lo de esta clase antes estaba en las rutas de 
 // productos, lo seperamos en una CAPA de SERVICIOS aparte,
@@ -10,10 +10,10 @@ class ProductsService {
   constructor() {
     this.products = [];
     this.Generate();
-    this.poolDB = poolDB;
+    /*this.poolDB = poolDB;
     this.poolDB.on("error", (error) => {
       console.log(error);
-    });
+    });*/
   }
 
   Generate() {
@@ -44,9 +44,14 @@ class ProductsService {
 
   async Find() {
     const query = "SELECT * FROM tasks";
-    const response = await this.poolDB.query(query);
+    // Usando el pool de conexiones
+    //const response = await this.poolDB.query(query);
+    //return response.rows;
 
-    return response.rows;
+
+    // Usando sequelize
+    const [data] = await sequelize.query(query);
+    return data;
   }
 
   async FindOne(id) {

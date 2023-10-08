@@ -7,7 +7,8 @@ import routerApi from "./routes/index.js";
 import { 
   boomErrorHandler, 
   errorHandler, 
-  logErrors 
+  logErrors, 
+  ormErrorHandler
 } from "./middlewares/error.handler.js";
 
 const app = express();
@@ -45,7 +46,9 @@ routerApi(app);
 // pues como van a ir pasandonse por el next
 app.use(logErrors);
 app.use(boomErrorHandler);
+app.use(ormErrorHandler);
 app.use(errorHandler);
+
 
 app.listen(port, () => {
   console.log(`App corriendo en http://localhost:${port}`);
