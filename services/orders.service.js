@@ -8,13 +8,23 @@ class OrdersService {
     return await models.Order.create(data);
   }
 
+  async AddItem(data) {
+    return await models.OrderProduct.create(data);
+  }
+
   async Find() {
     return await models.Order.findAll();
   }
 
   async FindOne(id) {
     return await models.Order.findByPk(id, {
-      include: ["customer"]
+      include: [
+        {
+          association: "customer",
+          include: [ "user" ]
+        },
+        "items"
+      ]
     });
   }
 
