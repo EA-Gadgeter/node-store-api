@@ -1,18 +1,22 @@
+const { sequelize: { models } } = require("./../libs/sequelize");
+
 class CategoriesService {
 
   constructor() {
   }
 
   async Create(data) {
-    return data;
+    return await models.Category.create(data);
   }
 
   async Find() {
-    return [];
+    return await models.Category.findAll();
   }
 
   async FindOne(id) {
-    return { id };
+    return models.Category.findByPk(id,  {
+      include: ["products"]
+    });
   }
 
   async Update(id, changes) {

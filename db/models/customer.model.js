@@ -54,6 +54,10 @@ class Customer extends Model {
         // Relacion 1 a 1, Customer le pertenece a User, llave
         // foranea en Customer
         this.belongsTo(models.User, { as: "user" });
+        this.hasMany(models.Order, {
+            as: "orders",
+            foreignKey: "customerId"
+        });
     }
 
     static config(sequelize) {

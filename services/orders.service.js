@@ -1,17 +1,21 @@
+const { sequelize: { models } } = require("./../libs/sequelize");
+
 class OrdersService {
 
   constructor(){
   }
   async Create(data) {
-    return data;
+    return await models.Order.create(data);
   }
 
   async Find() {
-    return [];
+    return await models.Order.findAll();
   }
 
   async FindOne(id) {
-    return { id };
+    return await models.Order.findByPk(id, {
+      include: ["customer"]
+    });
   }
 
   async Update(id, changes) {
@@ -27,4 +31,4 @@ class OrdersService {
 
 }
 
-export default OrdersService;
+module.exports = OrdersService;

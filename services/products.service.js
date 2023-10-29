@@ -1,72 +1,43 @@
-const { faker } = require("@faker-js/faker");
-const boom = require("@hapi/boom");
-
-const { sequelize } = require("../libs/sequelize.js");
+const { sequelize: { models } } = require("./../libs/sequelize");
 
 // Todo lo de esta clase antes estaba en las rutas de 
 // productos, lo seperamos en una CAPA de SERVICIOS aparte,
 // esto basandonos en la CLEAN ARCHITECTURE
 class ProductsService {
   constructor() {
-    this.products = [];
-    this.Generate();
+    //this.products = [];
+    //this.Generate();
     /*this.poolDB = poolDB;
     this.poolDB.on("error", (error) => {
       console.log(error);
     });*/
   }
 
-  Generate() {
-    const limit = 100;
-
-    for (let i = 0; i < limit; i++) {
-      this.products.push(
-        {
-          id: faker.string.uuid(),
-          name: faker.commerce.productName(),
-          price: Number(faker.commerce.price()),
-          image: faker.image.url(),
-          isBlock: faker.datatype.boolean()
-        }
-      );
-    }
-  }
-
   async Create(data) {
-    const newProduct = {
-      id: faker.string.uuid(),
-      ...data
-    };
-
-    this.products.push(newProduct);
-    return newProduct;
+   return await models.Product.create(data);
   }
 
   async Find() {
-    const query = "SELECT * FROM tasks";
+    // const query = "SELECT * FROM tasks";
     // Usando el pool de conexiones
     //const response = await this.poolDB.query(query);
     //return response.rows;
 
 
     // Usando sequelize
-    const [data] = await sequelize.query(query);
-    return data;
+    //const [data] = await sequelize.query(query);
+    // return data;
+
+    // Usando ORM sequelize
+    return await models.Product.findAll({
+      include: ["category"]
+    });
   }
 
   async FindOne(id) {
-    const product = this.products.find(product => product.id === id);
-
-    if (!product) {
-      // Boom tiene funciones para los diferentes statuscode
-      throw boom.notFound("Product not found");
-    }
-
-    if (product.isBlock) {
-      throw boom.conflict("Product is blocked");
-    }
-
-    return product;
+    return await models.Product.findByPk(id, {
+      include: ["category"]
+    });
   }
 
   async Update(id, changes) {
