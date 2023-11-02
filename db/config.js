@@ -15,9 +15,13 @@ module.exports = {
         url: URI,
         dialect: "postgres"
     },
-    
     production: {
         url: URI,
-        dialect: "postgres"
+        dialect: "postgres",
+        dialectOptions: {
+            ssl: {
+                rejectUnauthorized: false
+            }
+        }
     }
 };
