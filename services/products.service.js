@@ -1,4 +1,5 @@
 const { sequelize: { models } } = require("./../libs/sequelize");
+const { Op } = require("sequelize");
 
 // Todo lo de esta clase antes estaba en las rutas de 
 // productos, lo seperamos en una CAPA de SERVICIOS aparte,
@@ -17,7 +18,7 @@ class ProductsService {
    return await models.Product.create(data);
   }
 
-  async Find({ limit, offset }) {
+  async Find({ limit, offset, price, priceMin, priceMax }) {
     // const query = "SELECT * FROM tasks";
     // Usando el pool de conexiones
     //const response = await this.poolDB.query(query);
@@ -31,11 +32,23 @@ class ProductsService {
     // Usando ORM sequelize
     const options = {
       include: ["category"],
+      where: { }
     };
 
     if (limit && offset) {
       options.limit = limit;
       options.offset = offset;
+    }
+
+    if (price) {
+      options.where.price = price;
+    }
+
+    if (priceMin && priceMax) {
+      options.where.price = {
+        [Op.gte]: priceMin,
+        [Op.lte]: priceMax
+      }
     }
 
     return await models.Product.findAll(options);
