@@ -5,16 +5,23 @@ const { validatorHandler } = require("../middlewares/validator.handler.js");
 const {
   createProductSchema,
   getProductSchema,
-  updateProductSchema
+  updateProductSchema,
+  queryProductSchema
 } = require("../dto/product.dto.js")
 
 const productsRouter = express.Router();
 // Generamos una INSTANCIA del servicio
 const service = new ProductsService();
 
-productsRouter.get("/", async (req, res) => {
-  const products = await service.Find();
-  res.json(products);
+productsRouter.get("/",
+  validatorHandler(queryProductSchema, "query"),
+  async (req, res, next) => {
+  try {
+    const products = await service.Find(req.query);
+    res.json(products);
+  } catch (error) {
+    next(error)
+  }
 });
 
 // Las rutas fijas deben ir antes de que las dinamicas, pues

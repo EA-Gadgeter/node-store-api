@@ -17,7 +17,7 @@ class ProductsService {
    return await models.Product.create(data);
   }
 
-  async Find() {
+  async Find({ limit, offset }) {
     // const query = "SELECT * FROM tasks";
     // Usando el pool de conexiones
     //const response = await this.poolDB.query(query);
@@ -29,9 +29,16 @@ class ProductsService {
     // return data;
 
     // Usando ORM sequelize
-    return await models.Product.findAll({
-      include: ["category"]
-    });
+    const options = {
+      include: ["category"],
+    };
+
+    if (limit && offset) {
+      options.limit = limit;
+      options.offset = offset;
+    }
+
+    return await models.Product.findAll(options);
   }
 
   async FindOne(id) {

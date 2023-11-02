@@ -37,7 +37,6 @@ const ProductSchema = {
     field: "category_id",
     allowNull: false,
     type: DataTypes.INTEGER,
-    unique: true,
     references :{
       model: CATEGORY_TABLE,
       key: "id"
