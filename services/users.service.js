@@ -1,6 +1,6 @@
 const boom =  require("@hapi/boom");
+const bcrypt = require("bcrypt");
 
-const poolDB = require("../libs/postgresPool.js");
 const { sequelize } = require("../libs/sequelize.js");
 
 const { models } = sequelize;
@@ -8,15 +8,21 @@ const { models } = sequelize;
 class UsersService {
   constructor() {
     // Cada servicio debe tener internamente el mismo pool
-    this.poolDB = poolDB;
+    //this.poolDB = poolDB;
     // Imprimimos un mensaje por si la conexion llega a fallar
-    this.poolDB.on("error", (error) => {
-      console.log(error);
-    });
+    //this.poolDB.on("error", (error) => {
+    //  console.log(error);
+    //});
   }
 
   async Create(data) {
-    const newUser = await models.User.create(data);
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const newUser = await models.User.create({
+      ...data,
+      password: hashedPassword
+    });
+   
+    delete newUser.dataValues.password;
     return newUser;
   }
 

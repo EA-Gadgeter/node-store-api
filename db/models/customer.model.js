@@ -19,7 +19,7 @@ const CustomerSchema = {
     lastName: {
         allowNull: false,
         type: DataTypes.STRING,
-        filed: "last_name"
+        field: "last_name"
     },
 
     phone: {

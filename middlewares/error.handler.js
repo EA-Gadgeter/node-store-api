@@ -33,6 +33,7 @@ function errorHandler(error, req, res, next) {
 
 function ormErrorHandler(err, req, res, next) {
   if (err instanceof ValidationError) {
+    console.log(err);
     const { parent, errors } = err;
     res.status(409).json({
       statusCode: 409,

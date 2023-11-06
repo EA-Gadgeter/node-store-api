@@ -4,6 +4,7 @@ const cors = require("cors");
 const appConfig = require("./config/config.js");
 const routerApi = require("./routes/index.js");
 
+const { checkApiKey } = require("./middlewares/auth.handler");
 const { 
   boomErrorHandler, 
   errorHandler, 
@@ -31,11 +32,11 @@ const options = {
 };
 app.use(cors(options));
 
-app.get("/", (req, res) => {
+app.get("/", checkApiKey, (req, res) => {
   res.send("Hola, mi server en express");
 });
 
-app.get("/nueva-ruta", (req, res) => {
+app.get("/nueva-ruta", checkApiKey, (req, res) => {
   res.send("Hola, soy una nueva ruta");
 });
 
@@ -45,8 +46,8 @@ routerApi(app);
 // Es importante la forma en la que se definen los middlewares a usar
 // pues como van a ir pasandonse por el next
 app.use(logErrors);
-app.use(boomErrorHandler);
 app.use(ormErrorHandler);
+app.use(boomErrorHandler);
 app.use(errorHandler);
 
 
