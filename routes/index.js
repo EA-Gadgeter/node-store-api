@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const passport = require("passport");
 
 const productsRouter = require("./products.router.js");
 const usersRouter = require("./users.router.js");
@@ -14,7 +15,11 @@ function routerApi(app) {
 
   router.use("/products", productsRouter);
   router.use("/users", usersRouter);
-  router.use("/categories", categoriesRouter);
+  router.use(
+    "/categories",
+     passport.authenticate("jwt", { session: false }),
+     categoriesRouter
+  );
   router.use("/customers", customersRouter);
   router.use("/orders", ordersRouter);
   router.use("/auth", authRouter);

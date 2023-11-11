@@ -12,6 +12,7 @@ const appConfig = {
   port: process.env.PORT ?? 3000,
   idProd: process.env.NODE_ENV === "production",
   apiKey: process.env.API_KEY,
+  jwtSecret: process.env.JWT_SECRET,
   db: {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
