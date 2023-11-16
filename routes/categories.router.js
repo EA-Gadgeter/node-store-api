@@ -2,6 +2,8 @@ const { Router }  = require("express");
 
 const CategoryService = require("./../services/categories.service.js");
 const { validatorHandler } = require("./../middlewares/validator.handler.js");
+const { checkRoles } = require("./../middlewares/auth.handler.js");
+const ROLES = require("../utils/auth/roles");
 const { 
   createCategorySchema, 
   updateCategorySchema, 
@@ -34,6 +36,7 @@ categoriesRouter.get('/:id',
 );
 
 categoriesRouter.post('/',
+  checkRoles(ROLES.ADMIN, ROLES.CUSTOMER),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
@@ -47,6 +50,7 @@ categoriesRouter.post('/',
 );
 
 categoriesRouter.patch('/:id',
+  checkRoles(ROLES.ADMIN, ROLES.CUSTOMER),
   validatorHandler(getCategorySchema, 'params'),
   validatorHandler(updateCategorySchema, 'body'),
   async (req, res, next) => {
@@ -62,6 +66,7 @@ categoriesRouter.patch('/:id',
 );
 
 categoriesRouter.delete('/:id',
+  checkRoles(ROLES.ADMIN, ROLES.CUSTOMER),
   validatorHandler(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {

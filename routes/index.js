@@ -7,6 +7,7 @@ const categoriesRouter = require("./categories.router.js");
 const customersRouter = require("./customers.router.js");
 const ordersRouter = require("./orders.router");
 const authRouter = require("./auth.router");
+const profileRouter = require("./profile.router");
 
 function routerApi(app) {
   // Creando una ruta madre dinamica
@@ -23,6 +24,11 @@ function routerApi(app) {
   router.use("/customers", customersRouter);
   router.use("/orders", ordersRouter);
   router.use("/auth", authRouter);
+  router.use(
+    "/profile",
+    passport.authenticate("jwt", { session: false }),
+    profileRouter
+  );
 }
 
 module.exports = routerApi;

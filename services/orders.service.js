@@ -12,6 +12,22 @@ class OrdersService {
     return await models.OrderProduct.create(data);
   }
 
+  async FindByUser(userId) {
+    const orders = await models.Order.findAll({
+      where: {
+        "$customer.user.id$": userId
+      },
+      include: [
+        {
+          association: "customer",
+          include: ["user"]
+        },
+      ]
+    });
+
+    return orders;
+  }
+
   async Find() {
     return await models.Order.findAll();
   }

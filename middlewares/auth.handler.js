@@ -12,4 +12,15 @@ function checkApiKey(req, res, next) {
     }
 }
 
-module.exports = { checkApiKey };
+function checkRoles(...roles) {
+    return (req, res, next) => {
+        const user = req.user;
+        if (roles.includes(user.role)) {
+            next();
+        } else {
+            next(boom.unauthorized(`Role ${user.role} is not authorized for this`));
+        }
+    };
+}
+
+module.exports = { checkApiKey, checkRoles };
