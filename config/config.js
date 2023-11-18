@@ -13,6 +13,8 @@ const appConfig = {
   idProd: process.env.NODE_ENV === "production",
   apiKey: process.env.API_KEY,
   jwtSecret: process.env.JWT_SECRET,
+  recoveryEmail: process.env.EMAIL_FOR_RECOVERY,
+  recoveryPassword: process.env.PASS_FOR_RECOVERY,
   db: {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
